@@ -1,276 +1,159 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback } from 'react';
 import { motion } from 'motion/react';
-import { Button } from '@/components/ui/button';
-import { SubscriptionOption } from './subscription-option';
-import { CollapsibleSection } from './collapsible-section';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
+import useEmblaCarousel from 'embla-carousel-react';
+
+interface Product {
+  id: string;
+  title: string;
+  badge: string;
+  image: string;
+  benefits: string[];
+}
+
+const products: Product[] = [
+  {
+    id: 'longevity-supplement',
+    title: 'SUPLEMENTO DE LONGEVIDADE',
+    badge: 'Longevity Supplement',
+    image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&h=800&fit=crop',
+    benefits: [
+      'Bem-estar geral',
+      'Apoio à longevidade saudável baseado nos principais mecanismos do envelhecimento',
+      'Desempenho cognitivo',
+      'Hidratação e elasticidade da pele',
+      'Regeneração, resiliência e saúde celular'
+    ]
+  },
+  {
+    id: 'fasting-support',
+    title: 'SUPORTE PARA JEJUM',
+    badge: 'Fasting Support',
+    image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&h=800&fit=crop',
+    benefits: [
+      'Energia física e mental sustentada',
+      'Saciedade (Redução da fome)',
+      'Flexibilidade metabólica (queima de gordura)',
+      'Ambiente favorável à preservação da massa muscular',
+      'Efeitos do jejum potencializados a nível celular',
+      'Apoio à longevidade saudável'
+    ]
+  }
+];
+
+function ProductCard({ product }: { product: Product }) {
+  return (
+    <motion.div
+      className="flex-shrink-0 w-full"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+    >
+      {/* Product Image Card with off-white background */}
+      <div className="relative w-full aspect-square rounded-lg overflow-hidden" style={{ backgroundColor: '#f5f4f0' }}>
+        <div className="w-full h-full flex items-center justify-center p-8">
+          <img 
+            src={product.image} 
+            alt={product.title}
+            className="max-w-full max-h-full object-contain"
+          />
+        </div>
+      </div>
+
+      {/* Product Info - Outside the card, below */}
+      <div className="mt-6">
+        {/* Title and Badge */}
+        <div className="mb-4">
+          <h3 className="text-lg font-bold text-gray-900 mb-3">
+            {product.title}
+          </h3>
+          <div className="inline-block px-3 py-1 border border-gray-900 rounded-full">
+            <span className="text-xs font-medium">{product.badge}</span>
+          </div>
+        </div>
+
+        {/* Benefits Section - Always visible, no collapse */}
+        <div className="border-t border-gray-200 pt-4">
+          <h4 className="font-semibold text-base mb-3">Ativos</h4>
+          <div className="space-y-2 mb-6">
+            {product.benefits.map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-2">
+                <span className="text-gray-600 text-sm mt-1">•</span>
+                <p className="text-gray-600 text-sm leading-relaxed">{benefit}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Buy Button */}
+        <button 
+          onClick={() => {
+            const buySection = document.getElementById('product-buy-section');
+            buySection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+          className="w-full bg-black text-white font-semibold py-3 rounded hover:bg-gray-800 transition-colors uppercase text-sm tracking-wider"
+        >
+          Comprar
+        </button>
+      </div>
+    </motion.div>
+  );
+}
 
 export function ProductSection() {
-  const [selectedSupply, setSelectedSupply] = useState('4-month');
-  const [expandedSupply, setExpandedSupply] = useState<string | null>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
-  
-  const supplies = [
-    { 
-      id: '1-month', 
-      label: '1-month supply', 
-      price: 112.50, 
-      originalPrice: 125,
-      perMonth: 112.50, 
-      discount: 10,
-      deliveryText: '1-month supply delivered monthly',
-      badge: null
-    },
-    { 
-      id: '2-month', 
-      label: '2-month supply', 
-      price: 200, 
-      originalPrice: 250,
-      perMonth: 100, 
-      discount: 20,
-      deliveryText: '2-month supply delivered every 2 months',
-      badge: null
-    },
-    { 
-      id: '4-month', 
-      label: '4-month supply', 
-      price: 380, 
-      originalPrice: 500,
-      perMonth: 95, 
-      discount: 24,
-      deliveryText: '4-month supply delivered every 4 months',
-      badge: 'CLINICALLY RECOMMENDED'
-    }
-  ];
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    containScroll: 'trimSnaps',
+    dragFree: false,
+    slidesToScroll: 1
+  });
+
+  const scrollTo = useCallback((index: number) => {
+    if (emblaApi) emblaApi.scrollTo(index);
+  }, [emblaApi]);
 
   return (
-    <section className="relative bg-gray-50 py-20 min-h-screen">
-      <div className="w-full container mx-auto lg:px-6 px-1 xl:px-8">
-        <div className="lg:flex lg:gap-12">
-          {/* Left side - Scrollable Image Grid */}
-          <motion.div 
-            className="space-y-4 lg:w-[55%]"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-                {/* Row 1 */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="aspect-[4/5] bg-gray-200 rounded overflow-hidden max-w-[500px]">
-                    <img 
-                      src="https://framerusercontent.com/images/uZIcodXSiRUumZ28lHrZkXvhbg.png?width=800" 
-                      alt="Product 1"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="aspect-[4/5] bg-gray-200 rounded overflow-hidden max-w-[500px]">
-                    <video 
-                      src="https://res.cloudinary.com/dcxo7cldm/video/upload/w_800/v1760536479/4-5_PDP_Softgels_Oct_2025_V2_vw0lzi.mp4"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+    <section className="relative bg-gray-50 py-16">
+      <div className="w-full container mx-auto lg:px-6 px-4 xl:px-8">
+        {/* Title */}
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900"
+        >
+          Nossos Produtos
+        </motion.h2>
+
+        {/* Desktop: Grid layout */}
+        <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
+          ))}
+        </div>
+
+        {/* Mobile: Embla Carousel with next item preview */}
+        <div className="md:hidden relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-4">
+              {products.map((product, index) => (
+                <div 
+                  key={product.id}
+                  className="flex-[0_0_calc(100%-60px)] min-w-0"
+                  onClick={() => scrollTo(index)}
+                >
+                  <ProductCard
+                    product={product}
+                  />
                 </div>
-
-                {/* Row 2 */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="aspect-[4/5] bg-gray-200 rounded overflow-hidden max-w-[500px]">
-                    <img 
-                      src="https://framerusercontent.com/images/WtKQ0cxb5NtRiRa2CgrWMA9f2I.png?width=800" 
-                      alt="Product 2"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="aspect-[4/5] bg-gray-200 rounded overflow-hidden max-w-[500px]">
-                    <img 
-                      src="https://framerusercontent.com/images/FhIeD9Hw066TbTUVnIBwXD2ILdg.png?width=800" 
-                      alt="Product 3"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-
-                {/* Row 3 */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="aspect-[4/5] bg-gray-200 rounded overflow-hidden max-w-[500px]">
-                    <img 
-                      src="https://framerusercontent.com/images/TJ1rJfqmOlX024hc8ZyXPwLmrbc.png?width=800" 
-                      alt="Product 4"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="aspect-[4/5] bg-gray-200 rounded overflow-hidden max-w-[500px]">
-                    <img 
-                      src="https://framerusercontent.com/images/JPrQX6BwbPj9TYXpcGVOkIcsPg.png?width=800" 
-                      alt="Product 5"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-          </motion.div>
-
-          {/* Right side - Price Section */}
-          <div className="mt-8 lg:mt-0 lg:w-[45%]">
-            <motion.div 
-              className="space-y-6 w-full"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-
-                {/* Header */}
-                <div className="space-y-4">
-                  <div className="inline-block px-4 py-1 border border-black rounded-full">
-                    <span className="text-sm font-medium">Bestseller</span>
-                  </div>
-                  
-                  <h2 className="text-4xl font-bold">Try Mitopure Today</h2>
-                  
-                  <p className="text-gray-600 leading-relaxed">
-                    Improve your cellular health by taking Mitopure in its simplest form with two softgels daily for the recommended dose of Urolithin A (500mg of Mitopure). Each sachet contains 60 softgels.
-                  </p>
-                </div>
-
-                {/* Supply Options */}
-                <div className="space-y-3">
-                  {supplies.map((supply) => (
-                    <SubscriptionOption
-                      key={supply.id}
-                      id={supply.id}
-                      label={supply.label}
-                      price={supply.price}
-                      originalPrice={supply.originalPrice}
-                      discount={supply.discount}
-                      perMonth={supply.perMonth}
-                      deliveryText={supply.deliveryText}
-                      badge={supply.badge}
-                      isSelected={selectedSupply === supply.id}
-                      isExpanded={expandedSupply === supply.id}
-                      onSelect={() => setSelectedSupply(supply.id)}
-                      onToggle={() => {
-                        setSelectedSupply(supply.id);
-                        setExpandedSupply(expandedSupply === supply.id ? null : supply.id);
-                      }}
-                    />
-                  ))}
-                </div>
-
-                {/* Buy Button */}
-                <Button className="w-full text-white font-semibold  hover:bg-gray-800 transition-colors uppercase h-12" size="lg">
-                  Buy now
-                </Button>
-
-                {/* Collapsible Information Sections */}
-                <div className="mt-8 space-y-0">
-                  {/* Clinically proven benefits */}
-                  <CollapsibleSection
-                    title="Clinically proven benefits"
-                    isExpanded={expandedSection === 'benefits'}
-                    onToggle={() => setExpandedSection(expandedSection === 'benefits' ? null : 'benefits')}
-                  >
-                    <div className="space-y-4">
-                      <p className="text-sm text-gray-600 leading-relaxed">
-                        Following over 15 years of research, groundbreaking discoveries and numerous clinical trials, 
-                        we have developed a powerful ingredient that's clinically validated and proven to target the 
-                        root causes of aging.{' '}
-                        <a href="#" className="underline">Learn more about Mitopure®</a>
-                      </p>
-                      
-                      <div className="space-y-3">
-                        <div className="flex items-start gap-3">
-                          <div className="w-1 h-6 bg-black shrink-0 mt-0.5"></div>
-                          <div>
-                            <strong className="text-sm">Cellular energy:</strong>
-                            <span className="text-sm text-gray-600"> Induces a signature of improved mitochondria*</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-start gap-3">
-                          <div className="w-1 h-6 bg-black shrink-0 mt-0.5"></div>
-                          <div>
-                            <strong className="text-sm">Muscle strength:</strong>
-                            <span className="text-sm text-gray-600"> Muscle strength increases by up to 12% after 16 weeks*</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CollapsibleSection>
-
-                  {/* Key ingredients */}
-                  <CollapsibleSection
-                    title="Key ingredients"
-                    isExpanded={expandedSection === 'ingredients'}
-                    onToggle={() => setExpandedSection(expandedSection === 'ingredients' ? null : 'ingredients')}
-                  >
-                    <div className="space-y-6">
-                      {/* Ingredient with image */}
-                      <div className="flex gap-4">
-                        <div className="w-20 h-20 bg-gray-100 rounded shrink-0 flex items-center justify-center overflow-hidden">
-                          <Image
-                            src="/assets/images/8.avif"
-                            alt="Mitopure molecule"
-                            width={80}
-                            height={80}
-                            className="object-contain"
-                          />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-base mb-1">Mitopure® (Urolithin A)</h4>
-                          <p className="text-sm text-gray-600">
-                            Highly pure Urolithin A clinically-validated and proven to target essential root causes of aging.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Clean formulation */}
-                      <div>
-                        <h4 className="font-semibold text-base mb-3">Clean formulation:</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div className="flex items-center gap-2">
-                            <CheckCircleIcon className="w-5 h-5 text-black" />
-                            <span className="text-sm">Vegan</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircleIcon className="w-5 h-5 text-black" />
-                            <span className="text-sm">Non-GMO</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircleIcon className="w-5 h-5 text-black" />
-                            <span className="text-sm">Gluten free</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircleIcon className="w-5 h-5 text-black" />
-                            <span className="text-sm">Free of big 8 food allergens</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircleIcon className="w-5 h-5 text-black" />
-                            <span className="text-sm">Lactose free</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CollapsibleSection>
-
-                  {/* How to use */}
-                  <CollapsibleSection
-                    title="How to use"
-                    isExpanded={expandedSection === 'howto'}
-                    onToggle={() => setExpandedSection(expandedSection === 'howto' ? null : 'howto')}
-                  >
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      Take two vegan softgels daily for the recommended dose of Urolithin A (500mg of Mitopure).
-                    </p>
-                  </CollapsibleSection>
-                </div>
-            </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

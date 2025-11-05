@@ -8,8 +8,8 @@ export const Banner = () => {
 
 
   return (
-    <div className="h-full lg:h-[600px] rounded-lg xl:rounded-xl lg:relative pb-2 overflow-hidden">
-      <div className="relative w-full aspect-square xl:aspect-auto overflow-hidden rounded-t-lg xl:rounded-t-xl">
+    <div className="h-full lg:h-[600px] rounded-lg lg:relative overflow-hidden mb-8">
+      <div className="relative w-full aspect-square xl:aspect-auto overflow-hidden rounded-lg">
         <video
           src="https://res.cloudinary.com/dcxo7cldm/video/upload/v1761215126/6_reasons_new_banner_fg8onr.mp4"
           loop
@@ -30,7 +30,7 @@ export const Banner = () => {
           }}
         />
       </div>
-      <div className="bg-[#363439]  rounded-b-lg xl:rounded-b-xl flex flex-col text-white p-6 gap-6  sm:px-12 md:py-8 md:px-[calc(100%/6)] lg:px-0 lg:bg-transparent lg:absolute lg:bottom-14 lg:left-14 lg:w-2/5 xl:w-2/6">
+      {/* <div className="bg-[#363439]  rounded-b-lg xl:rounded-b-xl flex flex-col text-white p-6 gap-6  sm:px-12 md:py-8 md:px-[calc(100%/6)] lg:px-0 lg:bg-transparent lg:absolute lg:bottom-14 lg:left-14 lg:w-2/5 xl:w-2/6">
         <div className="flex flex-col gap-4 xl:gap-8">
           <div></div>
           <div className="text-2xl md:text-3xl font-bold text-center xl:text-left">6 Reasons to Take Mitopure® for Longevity</div>
@@ -51,7 +51,7 @@ export const Banner = () => {
             </div>
             <Button className="w-full bg-white text-black hover:bg-transparent hover:text-white lg:h-12 h-10" variant="outline" size="lg" >Buy Now</Button>
           </div>
-      </div>
+      </div> */}
     </div>
   )
 }

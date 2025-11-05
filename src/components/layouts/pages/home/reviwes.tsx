@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 
 interface Review {
   type: 'text-only' | 'video-large' | 'video-medium' | 'image';
@@ -147,10 +146,15 @@ const ReviewCard = ({ review, index }: { review: Review; index: number }) => {
 export function ReviewsSection() {
   const [cols, setCols] = useState(1);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const updateCols = () => {
       const w = window.innerWidth;
+      const mobile = w < 768;
+      setIsMobile(mobile);
+      
       if (w >= 1280) setCols(4);
       else if (w >= 768) setCols(3);
       else if (w >= 640) setCols(2);
@@ -160,6 +164,26 @@ export function ReviewsSection() {
     window.addEventListener('resize', updateCols);
     return () => window.removeEventListener('resize', updateCols);
   }, []);
+
+  // Auto-collapse when section leaves viewport
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting && isExpanded) {
+          setIsExpanded(false);
+        }
+      },
+      { threshold: 0 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isExpanded, isMobile]);
 
   const reviews: Review[] = [
     {
@@ -230,9 +254,16 @@ export function ReviewsSection() {
 
   const columnData = distributeItems();
 
+  const maxHeight = isMobile ? (isExpanded ? 'max-content' : '400px') : '684px';
+
   return (
-    <div className="w-full py-12 px-4 flex justify-center" style={{ backgroundColor: '#efeee9' }}>
-      {/* Main container: max 1896x942 */}
+    <div 
+      ref={sectionRef}
+      className="w-full py-12 px-4 flex justify-center" 
+      style={{ 
+        backgroundColor: '#efeee9'
+      }}
+    >
       <div className="w-full flex flex-col items-center container mx-auto lg:px-20 px-1 xl:px-40">
         {/* Title */}
         <motion.h2 
@@ -243,15 +274,13 @@ export function ReviewsSection() {
           Loved by our community
         </motion.h2>
 
-        {/* Reviews container with gradient blur */}
+        {/* Scrollable reviews container */}
         <div className="relative w-full max-w-[1440px]">
           <div 
-            className="overflow-hidden transition-all duration-500 ease-in-out"
-            style={{ 
-              maxHeight: isExpanded ? '100%' : '684px'
-            }}
+            className={`w-full transition-all duration-500 ${isMobile && !isExpanded ? 'overflow-hidden' : ''} ${!isMobile ? 'overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200' : ''}`}
+            style={{ maxHeight }}
           >
-            <div className="grid gap-5" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+            <div className="grid gap-5 pb-4" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
               {columnData.map((column, colIdx) => (
                 <div key={colIdx} className="flex flex-col gap-5">
                   {column.map((review, idx) => (
@@ -262,33 +291,28 @@ export function ReviewsSection() {
             </div>
           </div>
 
-          {/* Gradient blur overlay - only show when not expanded */}
-          {!isExpanded && (
+          {/* Gradient blur overlay at the bottom - hide when expanded on mobile */}
+          {!(isMobile && isExpanded) && (
             <div 
-              className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+              className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-10"
               style={{
-                background: 'linear-gradient(to top, #efeee9 0%, rgba(239, 238, 233, 0.95) 40%, rgba(239, 238, 233, 0.6) 70%, transparent 100%)'
+                background: 'linear-gradient(to top, #efeee9 0%, rgba(239, 238, 233, 0.98) 30%, rgba(239, 238, 233, 0.85) 50%, rgba(239, 238, 233, 0.5) 75%, transparent 100%)'
               }}
             />
           )}
         </div>
 
-        {/* Show More button - hide when expanded */}
-        {!isExpanded && (
-          <motion.div 
+        {/* Show More button - only on mobile */}
+        {isMobile && !isExpanded && (
+          <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-center mt-10 w-full px-4 md:px-0"
+            onClick={() => setIsExpanded(true)}
+            className="mt-8 px-8 py-3 border border-gray-900 text-gray-900 text-sm font-semibold rounded hover:bg-gray-900 hover:text-white transition-all uppercase tracking-wider"
           >
-            <Button 
-              onClick={() => setIsExpanded(true)}
-              variant="outline"
-              className="w-full md:w-auto px-10 py-3 border border-gray-900 text-gray-900 text-xs font-semibold rounded hover:bg-gray-900 hover:text-white transition-all uppercase tracking-wider"
-            >
-              Show More
-            </Button>
-          </motion.div>
+            Show More
+          </motion.button>
         )}
       </div>
     </div>
