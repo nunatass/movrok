@@ -17,7 +17,7 @@ const products: Product[] = [
     id: 'longevity-supplement',
     title: 'SUPLEMENTO DE LONGEVIDADE',
     badge: 'Longevity Supplement',
-    image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&h=800&fit=crop',
+    image: 'https://betterbehealth.com.br/cdn/shop/files/Longevity_Supplement_Solo_UPSCALED_1_2.png?v=1754676481',
     benefits: [
       'Bem-estar geral',
       'Apoio à longevidade saudável baseado nos principais mecanismos do envelhecimento',
@@ -30,7 +30,7 @@ const products: Product[] = [
     id: 'fasting-support',
     title: 'SUPORTE PARA JEJUM',
     badge: 'Fasting Support',
-    image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&h=800&fit=crop',
+    image: 'https://betterbehealth.com.br/cdn/shop/files/Frame_1000007732_1_1_1_3.png?v=1754676787',
     benefits: [
       'Energia física e mental sustentada',
       'Saciedade (Redução da fome)',
@@ -45,14 +45,14 @@ const products: Product[] = [
 function ProductCard({ product }: { product: Product }) {
   return (
     <motion.div
-      className="flex-shrink-0 w-full"
+      className="flex-shrink-0 w-full h-full flex flex-col"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
     >
       {/* Product Image Card with off-white background */}
-      <div className="relative w-full aspect-square rounded-lg overflow-hidden" style={{ backgroundColor: '#f5f4f0' }}>
+      <div className="relative w-full aspect-square rounded-lg overflow-hidden" style={{ backgroundColor: '#f3f4f4' }}>
         <div className="w-full h-full flex items-center justify-center p-8">
           <img 
             src={product.image} 
@@ -63,7 +63,7 @@ function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Product Info - Outside the card, below */}
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col flex-1">
         {/* Title and Badge */}
         <div className="mb-4">
           <h3 className="text-lg font-bold text-gray-900 mb-3">
@@ -75,7 +75,7 @@ function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Benefits Section - Always visible, no collapse */}
-        <div className="border-t border-gray-200 pt-4">
+        <div className="border-t border-gray-400 border-dashed pt-4 flex-1">
           <h4 className="font-semibold text-base mb-3">Ativos</h4>
           <div className="space-y-2 mb-6">
             {product.benefits.map((benefit, idx) => (
@@ -90,10 +90,13 @@ function ProductCard({ product }: { product: Product }) {
         {/* Buy Button */}
         <button 
           onClick={() => {
-            const buySection = document.getElementById('product-buy-section');
-            buySection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // On mobile, scroll to price selection; on desktop, scroll to section top
+            const isMobile = window.innerWidth < 768;
+            const targetId = isMobile ? 'price-selection' : 'product-buy-section';
+            const target = document.getElementById(targetId);
+            target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }}
-          className="w-full bg-black text-white font-semibold py-3 rounded hover:bg-gray-800 transition-colors uppercase text-sm tracking-wider"
+          className="w-full bg-black text-white font-semibold py-3 rounded hover:bg-gray-800 transition-colors uppercase text-sm tracking-wider mt-auto"
         >
           Comprar
         </button>
@@ -129,12 +132,13 @@ export function ProductSection() {
         </motion.h2>
 
         {/* Desktop: Grid layout */}
-        <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
           {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
+            <div key={product.id} className="h-full">
+              <ProductCard
+                product={product}
+              />
+            </div>
           ))}
         </div>
 

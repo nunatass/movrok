@@ -117,7 +117,7 @@ export function ProductBuySection() {
           </motion.div>
 
           {/* Right side - Price Section */}
-          <div className="mt-8 lg:mt-0 lg:w-[45%]">
+          <div id="price-selection" className="mt-8 lg:mt-0 lg:w-[45%]">
             <motion.div 
               className="space-y-6 w-full"
               initial={{ opacity: 0, x: 20 }}
