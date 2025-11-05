@@ -104,7 +104,7 @@ export function BenefitsSection() {
   }, [emblaApi, onSelect]);
 
   return (
-    <>
+     <div className="w-full container mx-auto lg:px-4 px-2">
       <MobileCarousel 
         data={timelineData}
         selected={selected}
@@ -124,6 +124,6 @@ export function BenefitsSection() {
         smallSize={smallSize}
         largeSize={largeSize}
       />
-    </>
+    </div>
   );
 }
