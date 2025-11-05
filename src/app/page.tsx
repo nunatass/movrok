@@ -11,7 +11,7 @@ import { ProductBuySection } from "@/components/layouts/pages/home/product-buy-s
 export default function HomePage() {
 	return <Wrapper>
 		<Header />
-		<div className="w-full mx-auto px-1 sm:px-2 h-full">
+		<div className="w-full mx-auto p-1 sm:p-2 h-full">
 			<Banner />
 			<SliderReviews />
 	
