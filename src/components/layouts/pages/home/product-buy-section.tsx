@@ -98,7 +98,7 @@ export function ProductBuySection() {
                 </div>
 
                 {/* Row 3 */}
-                <div className="grid grid-cols-2 gap-2">
+                {/* <div className="grid grid-cols-2 gap-2">
                   <div className="aspect-[4/5] bg-gray-200 rounded overflow-hidden max-w-[500px]">
                     <img 
                       src="https://framerusercontent.com/images/TJ1rJfqmOlX024hc8ZyXPwLmrbc.png?width=800" 
@@ -113,7 +113,7 @@ export function ProductBuySection() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                </div>
+                </div> */}
           </motion.div>
 
           {/* Right side - Price Section */}
