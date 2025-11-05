@@ -30,9 +30,9 @@ export function DesktopTimeline({
   largeSize 
 }: DesktopTimelineProps) {
   return (
-    <div className="hidden md:block h-max min-h-[50vh] p-6">
-      <div className="flex items-end justify-between">
-        <h3 className="text-3xl lg:text-4xl xl:text-5xl font-bold w-2/5">Your cells feel the benefits before you do</h3>
+    <div className="hidden md:block h-max min-h-[50vh] px-6 py-4">
+      <div className="flex items-end justify-between mx-auto container">
+        <h3 className="text-3xl lg:text-3xl xl:text-4xl font-bold w-2/5 pl-4">Your cells feel the benefits before you do</h3>
 
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="w-12 h-12" onClick={handlePrevious}>
@@ -44,7 +44,7 @@ export function DesktopTimeline({
         </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-1.5 py-6">
+      <div className="max-w-7xl px-1.5 py-6">
         {/* Images Container */}
         <div className="relative" style={{ paddingTop: `${largeSize}%` }}>
           <div className="absolute bottom-0 left-0 right-0 flex gap-4">

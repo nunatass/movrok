@@ -47,9 +47,9 @@ export function ProductBuySection() {
   ];
 
   return (
-    <section id="product-buy-section" className="relative bg-gray-50 py-20 min-h-screen">
+    <section id="product-buy-section" className="bg-gray-50 py-4">
       <div className="w-full container mx-auto lg:px-6 px-1 xl:px-8">
-        <div className="lg:flex lg:gap-12">
+        <div className="lg:flex lg:gap-12 lg:items-start">
           {/* Left side - Scrollable Image Grid */}
           <motion.div 
             className="space-y-4 lg:w-[55%]"
@@ -119,7 +119,7 @@ export function ProductBuySection() {
           {/* Right side - Price Section */}
           <div id="price-selection" className="mt-8 lg:mt-0 lg:w-[45%]">
             <motion.div 
-              className="space-y-6 w-full"
+              className="space-y-6 w-full lg:sticky lg:top-4 lg:max-h-screen lg:overflow-auto"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
