@@ -119,7 +119,7 @@ export function ProductBuySection() {
           {/* Right side - Price Section */}
           <div id="price-selection" className="mt-8 lg:mt-0 lg:w-[45%]">
             <motion.div 
-              className="space-y-6 w-full lg:sticky lg:top-4 lg:max-h-screen lg:overflow-hidden"
+              className="space-y-6 w-full lg:sticky lg:top-4"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
